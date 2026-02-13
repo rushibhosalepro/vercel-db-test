@@ -11,7 +11,10 @@ export async function GET(_: Request) {
           email: `email+${random}@gmail.com`,
         },
       });
-      return { user };
+      const post = await tx.posts.create({
+        data: {},
+      });
+      return { user, post };
     });
     return NextResponse.json({ msg: "Hello", user });
   } catch (err) {
