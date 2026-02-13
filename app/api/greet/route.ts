@@ -4,10 +4,14 @@ import { NextResponse } from "next/server";
 export async function GET(_: Request) {
   try {
     const random = crypto.randomUUID();
-    const user = await prisma.user.create({
-      data: {
-        email: `email+${random}@gmail.com`,
-      },
+
+    const user = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          email: `email+${random}@gmail.com`,
+        },
+      });
+      return { user };
     });
     return NextResponse.json({ msg: "Hello", user });
   } catch (err) {
